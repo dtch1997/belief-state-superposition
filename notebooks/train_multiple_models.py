@@ -1,6 +1,8 @@
-# %%
 
+# %%
 import torch 
+import numpy as np
+import itertools
 import seaborn as sns
 import matplotlib.pyplot as plt
 import collections
@@ -17,23 +19,56 @@ train_dataset = get_dataset(n_samples, seq_len=seq_len)
 train_data_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 
 # %%
+# Sweep over different model sizes
 
-
-model_sizes = [16, 64, 256]
+d_models = [2, 4, 7, 8, 16, 32, 64]
 results = collections.defaultdict(dict)
-for model_size in model_sizes:
-    model = init_model(model_size).to(device)
-    loss_hist = train_model(model, train_data_loader, n_epochs=10, device = device)
-    results[model_size]['loss'] = loss_hist
-    results[model_size]['model'] = model
+for d_model in d_models:
+    model = init_model(d_model = d_model).to(device)
+    loss_hist = train_model(model, train_data_loader, n_epochs=10, show_progress_bar=True, device = device)
+    results[d_model]['loss'] = loss_hist
+    del model
+    # results[model_size]['model'] = model
 
-# %%
-# Plot results
+for model_size, result in results.items():
+    print(f"Model size: {model_size}, final loss: {result['loss'][-1]}")
+
 sns.set_theme()
 fig, ax = plt.subplots()
+num_tokens = np.arange(320) * batch_size * seq_len
 for model_size, result in results.items():
-    ax.plot(result['loss'], label=f"Model size: {model_size}")
-ax.set_xlabel('Epoch')
+    sns.lineplot(x = num_tokens, y = result['loss'], label=f"D_model: {model_size}", ax = ax)
+ax.set_xlabel('Tokens')
 ax.set_ylabel('Loss')
 ax.legend()
 plt.show()
+# %%
+# Compare layer 7 and layer 8 over multiple seeds
+
+seeds = [0, 1, 2, 3, 4]
+d_models = [7, 8]
+results = collections.defaultdict(dict)
+for seed, d_model in itertools.product(seeds, d_models):
+    model = init_model(
+        d_model = d_model,
+        seed = seed
+    ).to(device)
+    loss_hist = train_model(model, train_data_loader, n_epochs=10, show_progress_bar=True, device = device)
+    results[f'd_model={d_model}, seed={seed}']['loss'] = loss_hist
+    del model
+    # results[model_size]['model'] = model
+
+for exp_name, result in results.items():
+    print(f"{exp_name}, final loss: {result['loss'][-1]}")
+
+sns.set_theme()
+fig, ax = plt.subplots()
+num_tokens = np.arange(320) * batch_size * seq_len
+for exp_name, result in results.items():
+    sns.lineplot(x = num_tokens, y = result['loss'], label=exp_name, ax = ax)
+ax.set_xlabel('Tokens')
+ax.set_ylabel('Loss')
+ax.legend()
+plt.show()
+
+# %%
