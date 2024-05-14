@@ -4,8 +4,11 @@
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm-project.org)
 [![Checked with pyright](https://microsoft.github.io/pyright/img/pyright_badge.svg)](https://microsoft.github.io/pyright/)
 
-# Quickstart
+We study transformers trained to represent Hidden Markov Models (HMMs) as described in [Shai et al. (2024)](https://www.lesswrong.com/posts/gTZ2SxesbHckJ3CkF/transformers-represent-belief-state-geometry-in-their). 
 
+![The Z1R HMM](docs/assets/z1r_diagram.png)
+
+# Quickstart
 
 ## Install
 ```bash
@@ -14,7 +17,7 @@ pip install belief-state-superposition
 
 ## Usage
 
-Generate and inspect data from a Hidden Markov Model
+Generate and inspect data from the Z1R Hidden Markov Model
 
 ```python
 from belief_state_superposition.hmm import sample_sequence
