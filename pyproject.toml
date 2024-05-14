@@ -1,7 +1,7 @@
 [project]
 name = "belief-state-superposition"
 version = "0.1.0"
-description = "A template for python projects in PDM"
+description = "Investigating belief state representations of transformers trained on Hidden Markov Model emissions"
 authors = [
     { name = "Daniel Tan", email = "dtch1997@users.noreply.github.com" },
     { name = "Daniel CH Tan", email = "dtch1997@users.noreply.github.com" },
@@ -11,13 +11,13 @@ dependencies = [
     "ipykernel>=6.29.4",
     "eindex-callum>=0.1.1",
     "pre-commit>=3.7.1",
+    "ruff>=0.4.3",
+    "pytest>=8.2.0",
+    "pyright>=1.1.361",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
-
-[project.optional-dependencies]
-test = ["ruff>=0.4.3", "pytest>=8.2.0", "pyright>=1.1.361", "pre-commit>=3.7.1"]
 
 [build-system]
 requires = ["pdm-backend"]
@@ -40,7 +40,7 @@ lint.ignore = ["F841", "E501", "E741", "I001", "E731", "F722"]
 "__init__.py" = ["F401", "F403", "E402"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["pdm-python-project-template"]
+known-first-party = ["belief-state-superposition"]
 force-single-line = true
 single-line-exclusions = ["typing"]
 
@@ -50,7 +50,7 @@ ban-relative-imports = "all"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-include = ["pdm-python-project-template"]
+include = ["belief-state-superposition"]
 
 [tool.semantic_release]
 version_variables = [
