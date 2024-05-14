@@ -4,28 +4,44 @@
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm-project.org)
 [![Checked with pyright](https://microsoft.github.io/pyright/img/pyright_badge.svg)](https://microsoft.github.io/pyright/)
 
-This is a PDM template that can be used to quickly set up a new repository with several quality-of-life features:
-1. Pre-commit hooks to enforce style and types
-2. A CI workflow to support automated testing, semantic versioning, and package release
-
-More features that could be added at some point: 
-- Coverage reports with CodeCov
-- Badges for lint, test, release
-- Standard templates for Docker / Singularity containers to support containerized deployment
-- Documentation with Sphinx
-- Standard issue templates
-
-Install the template via: 
-```
-pdm init https://github.com/90HH/belief-state-superposition
-```
-Then replace this section with your own text
-
 # Quickstart
 
+
+## Install
 ```bash
 pip install belief-state-superposition
 ```
+
+## Usage
+
+Generate and inspect data from a Hidden Markov Model
+
+```python
+from belief_state_superposition.hmm import sample_sequence
+
+data = sample_sequence(16)
+beliefs, states, emissions, next_beliefs, next_states = zip(*data)
+print(beliefs)
+print(states)
+print(emissions)
+```
+
+Train a model on belief states
+
+```python
+import torch 
+from torch.utils.data import DataLoader
+from belief_state_superposition.model import init_model
+from belief_state_superposition.data import get_dataset
+from belief_state_superposition.train import train_model
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+train_dataset = get_dataset(1000)
+train_data_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+model = init_model().to(device)
+train_model(model, train_data_loader, n_epochs=10, show_progress_bar=True, device = device)
+```
+
 
 # Development
 
