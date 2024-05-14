@@ -10,6 +10,7 @@ dependencies = [
     "transformer-lens>=1.17.0",
     "ipykernel>=6.29.4",
     "eindex-callum>=0.1.1",
+    "pre-commit>=3.7.1",
 ]
 requires-python = ">=3.10"
 readme = "README.md"

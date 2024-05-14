@@ -1,6 +1,6 @@
 # ruff: noqa: F722
-import torch 
-from tqdm import tqdm, trange
+import torch
+from tqdm import trange
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from eindex import eindex
@@ -8,6 +8,7 @@ from jaxtyping import Float, Int
 
 from belief_state_superposition.model import init_model
 from belief_state_superposition.data import get_dataset
+
 
 def loss_fn(
     logits: Float[torch.Tensor, "n_batch n_seq n_dim"],
@@ -20,6 +21,7 @@ def loss_fn(
     correct_log_probs = eindex(log_probs, next_tokens, "batch seq [batch seq]")
     return -correct_log_probs
 
+
 def train_model(
     model: torch.nn.Module,
     train_data_loader: DataLoader,
@@ -28,7 +30,6 @@ def train_model(
     show_progress_bar: bool = False,
     device: str = "cpu",
 ) -> list[float]:
-    
     optim = Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
     model.train()
 
@@ -56,9 +57,12 @@ def train_model(
         epochs.set_description(f"train_loss: {loss:.3f}", refresh=True)
     return losses
 
+
 if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     train_dataset = get_dataset(1000)
     train_data_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     model = init_model().to(device)
-    train_model(model, train_data_loader, n_epochs=10, show_progress_bar=True, device = device)
+    train_model(
+        model, train_data_loader, n_epochs=10, show_progress_bar=True, device=device
+    )
